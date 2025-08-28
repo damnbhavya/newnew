@@ -155,7 +155,7 @@ class ApiService {
 
       // Check if it's a network error (backend not running)
       if (error instanceof TypeError && error.message.includes('fetch')) {
-        throw new Error('Backend server is not running. Please start the backend server on http://localhost:8000');
+        throw new Error(`Backend server is not running. Please check if the backend server is running on ${API_BASE_URL}`);
       }
 
       throw error;
@@ -254,6 +254,21 @@ class ApiService {
       method: 'POST',
       body: JSON.stringify(report),
     });
+  }
+
+  // Method for creating report with file uploads (FormData)
+  async createReportWithFiles(formData: FormData): Promise<ReportResponse> {
+    const response = await fetch(`${API_BASE_URL}/api/reports`, {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({ detail: 'Failed to submit report' }));
+      throw new Error(errorData.detail || 'Failed to submit report');
+    }
+
+    return response.json();
   }
 
   async getAllReports(statusFilter?: string, search?: string): Promise<ReportResponse[]> {

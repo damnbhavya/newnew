@@ -21,9 +21,17 @@ app = FastAPI(
 )
 
 # CORS middleware
+allowed_origins = [
+    config("FRONTEND_URL", default="http://localhost:5173"),
+]
+
+# Add additional allowed origins from environment variable
+additional_origins = config("ADDITIONAL_ALLOWED_ORIGINS", default="").split(",")
+allowed_origins.extend([origin.strip() for origin in additional_origins if origin.strip()])
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[config("FRONTEND_URL", default="http://localhost:5173")],
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

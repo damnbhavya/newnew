@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { FiArrowLeft, FiUpload, FiX, FiChevronDown, FiCheck } from 'react-icons/fi';
+import { apiService } from '../services/api';
 
 interface ReportFormProps {
   onBack: () => void;
@@ -124,15 +125,8 @@ const ReportForm: React.FC<ReportFormProps> = ({ onBack }) => {
         formDataToSend.append('files', file);
       });
 
-      // Submit directly to API
-      const response = await fetch('http://localhost:8000/api/reports', {
-        method: 'POST',
-        body: formDataToSend,
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to submit report');
-      }
+      // Submit directly to API using the API service
+      await apiService.createReportWithFiles(formDataToSend);
 
       setSubmitMessage('Your report has been submitted successfully. We will review it and get back to you soon.');
       setIsSubmitted(true);
