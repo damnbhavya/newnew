@@ -18,9 +18,7 @@ import {
   FiTrash2
 } from 'react-icons/fi';
 import { useAdmin } from '../contexts/AdminContext';
-
-// Get API base URL from environment
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+import { apiService } from '../services/api';
 
 interface Report {
   id: number;
@@ -177,7 +175,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBack }) => {
 
     if (file.type.startsWith('image/')) {
       // For images, open in a new tab using the download endpoint
-      const downloadUrl = `${API_BASE_URL}/api/reports/${selectedReport?.id}/files/${file.id}`;
+      const downloadUrl = `${apiService.getBaseURL()}/api/reports/${selectedReport?.id}/files/${file.id}`;
       window.open(downloadUrl, '_blank');
     } else {
       // For non-images, show file info
@@ -195,7 +193,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBack }) => {
         return;
       }
 
-      const downloadUrl = `${API_BASE_URL}/api/reports/${selectedReport.id}/files/${file.id}`;
+      const downloadUrl = `${apiService.getBaseURL()}/api/reports/${selectedReport.id}/files/${file.id}`;
 
       // Create a temporary link and trigger download
       const link = document.createElement('a');

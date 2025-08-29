@@ -9,8 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "backend": "cd backend && python start.py",
-    "dev:full": "concurrently \"npm run backend\" \"npm run dev\"",
-    "setup": "node setup.js"
+    "dev:full": "concurrently \"npm run backend\" \"npm run dev\""
   },
   "dependencies": {
     "@tailwindcss/typography": "^0.5.16",

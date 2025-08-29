@@ -112,6 +112,13 @@ const ReportForm: React.FC<ReportFormProps> = ({ onBack }) => {
     setSubmitMessage('');
 
     try {
+      // First check if backend is reachable
+      try {
+        await apiService.healthCheck();
+      } catch (healthError) {
+        throw new Error(`Cannot connect to server. Please check if the backend is running.`);
+      }
+
       // Create FormData for file upload
       const formDataToSend = new FormData();
       formDataToSend.append('name', formData.name);
@@ -146,7 +153,11 @@ const ReportForm: React.FC<ReportFormProps> = ({ onBack }) => {
       }, 3000);
     } catch (error) {
       console.error('Error submitting report:', error);
-      setSubmitMessage('There was an error submitting your report. Please try again.');
+      setSubmitMessage(
+        error instanceof Error
+          ? error.message
+          : 'There was an error submitting your report. Please try again.'
+      );
     } finally {
       setIsSubmitting(false);
     }

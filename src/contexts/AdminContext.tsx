@@ -164,6 +164,13 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       setIsLoading(true);
       setError(null);
 
+      // First check if backend is reachable
+      try {
+        await apiService.healthCheck();
+      } catch (healthError) {
+        throw new Error(`Backend server is not running. Please check if the backend server is running on ${apiService.getBaseURL()}`);
+      }
+
       const apiReports = await apiService.getAllReports(statusFilter, search);
 
       // Convert API responses to our Report interface
@@ -191,6 +198,14 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const loadReportStats = async () => {
     try {
+      // First check if backend is reachable
+      try {
+        await apiService.healthCheck();
+      } catch (healthError) {
+        console.error('Backend health check failed:', healthError);
+        return; // Don't set error state for stats, as it's not critical
+      }
+
       const stats = await apiService.getReportStats();
       setReportStats(stats);
     } catch (err) {

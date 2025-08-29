@@ -258,12 +258,47 @@ class ApiService {
 
   // Method for creating report with file uploads (FormData)
   async createReportWithFiles(formData: FormData): Promise<ReportResponse> {
-    const response = await fetch(`${API_BASE_URL}/api/reports`, {
+    const headers: Record<string, string> = {};
+
+    // Add authorization header if token exists
+    if (this.accessToken) {
+      headers['Authorization'] = `Bearer ${this.accessToken}`;
+    }
+
+    const response = await fetch(`${this.baseURL}/api/reports`, {
       method: 'POST',
+      headers,
       body: formData,
     });
 
     if (!response.ok) {
+      if (response.status === 401 && this.accessToken) {
+        // Try to refresh token and retry
+        const refreshToken = localStorage.getItem('refresh_token');
+        if (refreshToken) {
+          try {
+            await this.refreshToken();
+            // Retry with new token
+            const retryHeaders = { ...headers };
+            if (this.accessToken) {
+              retryHeaders['Authorization'] = `Bearer ${this.accessToken}`;
+            }
+            const retryResponse = await fetch(`${this.baseURL}/api/reports`, {
+              method: 'POST',
+              headers: retryHeaders,
+              body: formData,
+            });
+            if (!retryResponse.ok) {
+              throw new Error(`HTTP error! status: ${retryResponse.status}`);
+            }
+            return retryResponse.json();
+          } catch (refreshError) {
+            this.logout();
+            throw new Error('Authentication failed');
+          }
+        }
+      }
+
       const errorData = await response.json().catch(() => ({ detail: 'Failed to submit report' }));
       throw new Error(errorData.detail || 'Failed to submit report');
     }
@@ -310,6 +345,16 @@ class ApiService {
   // Check if user is authenticated
   isAuthenticated(): boolean {
     return !!this.accessToken;
+  }
+
+  // Get base URL for constructing download URLs
+  getBaseURL(): string {
+    return this.baseURL;
+  }
+
+  // Health check endpoint
+  async healthCheck(): Promise<{ status: string }> {
+    return this.request<{ status: string }>('/health');
   }
 }
 
