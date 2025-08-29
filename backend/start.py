@@ -19,13 +19,19 @@ def main():
         from dotenv import load_dotenv
         load_dotenv(env_file)
 
+    # Get port from environment variable (for Railway deployment)
+    port = int(os.getenv("PORT", 8000))
+    
+    # Check if we're in production
+    is_production = os.getenv("RAILWAY_ENVIRONMENT") or os.getenv("VERCEL") or os.getenv("NODE_ENV") == "production"
+
     # Start the server
     uvicorn.run(
         "main:app",
         host="0.0.0.0",
-        port=8000,
-        reload=True,
-        reload_dirs=[str(backend_dir)],
+        port=port,
+        reload=not is_production,  # Only reload in development
+        reload_dirs=[str(backend_dir)] if not is_production else None,
         log_level="info"
     )
 

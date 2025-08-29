@@ -1,4 +1,4 @@
-# Backend dependencies
+# Backend dependencies for FastAPI
 fastapi==0.104.1
 uvicorn[standard]==0.24.0
 python-multipart==0.0.6
@@ -13,13 +13,6 @@ email-validator==2.1.0
 aiofiles==23.2.1
 python-dotenv==1.0.0
 
-# Flask alternative (optional)
-flask==3.0.0
-flask-cors==4.0.0
-flask-sqlalchemy==3.1.1
-flask-migrate==4.0.5
-flask-jwt-extended==4.6.0
-
-# Development
+# Development (optional)
 pytest==7.4.3
 httpx==0.25.2

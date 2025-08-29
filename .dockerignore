@@ -1,0 +1,56 @@
+# Node modules and frontend build
+node_modules/
+dist/
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+.pytest_cache/
+
+# Virtual environments
+backend/venv/
+backend/env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Logs
+*.log
+
+# Frontend source (not needed in backend container)
+src/
+public/
+*.json
+*.js
+*.ts
+*.tsx
+index.html
+tailwind.config.js
+postcss.config.cjs
+vite.config.ts
+tsconfig*.json
+eslint.config.js
+
+# Documentation
+README.md
+DEPLOYMENT.md
+deployment-env-template.txt

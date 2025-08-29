@@ -1,5 +1,21 @@
 # 🚀 Deployment Guide
 
+## 🐳 Docker Build Error Fix
+
+If you're getting this Railway deployment error:
+```
+Error: [Errno 26] Text file busy: '/opt/venv/bin/python'
+ERROR: failed to build: failed to solve: process "/bin/bash -ol pipefail -c python -m venv --copies /opt/venv && . /opt/venv/bin/activate && pip install -r requirements.txt" did not complete successfully: exit code: 1
+```
+
+**✅ This has been FIXED by:**
+1. Cleaned up conflicting dependencies in `requirements.txt`
+2. Added proper `Dockerfile` for Railway
+3. Added `.dockerignore` to exclude unnecessary files
+4. Added `railway.json` configuration
+
+**🔄 To deploy:** Just push your code and Railway will automatically use the new Dockerfile!
+
 ## Quick Fix for Your Current Issue
 
 Your deployed app isn't working because the frontend is still trying to connect to `localhost:8000` instead of your Railway backend URL.
